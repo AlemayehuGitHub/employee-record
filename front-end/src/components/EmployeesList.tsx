@@ -8,6 +8,7 @@ import {
 import { Link } from "react-router-dom";
 import EmployeeModel from "../types/EmployeeModel";
 import { ButtonDanger, ButtonPrimary, Container, Table, Td, Tr } from "../styles/Components";
+import { AlertInfo } from "../styles/Forms";
 
 type Props = {   
   retrieveEmployees:any,
@@ -100,9 +101,9 @@ class EmployeesList extends Component<Props, State> {
         </ButtonDanger>
         </div>
         ): (
-          <div className="alert alert-info w-100">
+          <AlertInfo>
               Oops! no data found.
-          </div>
+          </AlertInfo>
         )
         }
       </Container>

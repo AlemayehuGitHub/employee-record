@@ -3,7 +3,9 @@
     "react-scripts": "4.0.3"
   },
   "scripts": {
+    "heroku-postbuild": "cd front-end && npm install",
     "heroku-postbuild": "cd back-end && npm install",
+    "start": "node back-end/server.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
