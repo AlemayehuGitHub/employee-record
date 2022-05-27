@@ -10,7 +10,7 @@ import {
     UPDATING_EMPLOYEE,
     DELETING_EMPLOYEE,
     DELETING_ALL_EMPLOYEES
-  } from "./../actions/types";
+  } from "../actions/types";
   
 import { put, takeEvery } from 'redux-saga/effects'
 
