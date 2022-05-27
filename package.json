@@ -5,8 +5,7 @@
   "scripts": {
     "heroku-postbuild": "cd front-end && npm install",
     "heroku-postbuild": "cd back-end && npm install",
-    "start": "node back-end/server.js",
-    "start": "cd front-end && react-scripts start",
+    "start": "cd front-end && react-scripts start && cd ./../back-end && nodemon serve",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

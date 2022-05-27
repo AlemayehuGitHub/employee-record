@@ -46,7 +46,7 @@ export const Select = styled.select`
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 `;
 
-export const Message = styled.label`
+export const ErrorMessage = styled.label`
 	margin-bottom: 0.5em;
 	color: palevioletred;
     display: block;

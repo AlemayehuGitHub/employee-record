@@ -1,7 +1,7 @@
 export default interface EmployeeModel {
   _id?: any | null,
   name: string,
-  dob: string,
+  dob: Date,
   gender: string,
-  sallary: string,
+  sallary: number,
 }

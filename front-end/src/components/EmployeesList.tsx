@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import {
   retrieveEmployees,
   deleteAllEmployees,
@@ -9,10 +9,11 @@ import { Link } from "react-router-dom";
 import EmployeeModel from "../types/EmployeeModel";
 import { ButtonDanger, ButtonPrimary, Container, Table, Td, Tr } from "../styles/Components";
 import { AlertInfo } from "../styles/Forms";
+import moment from "moment";
 
 type Props = {   
-  retrieveEmployees:any,
-  deleteAllEmployees:any,
+  retrieveEmployees: Function,
+  deleteAllEmployees: Function,
   deleteEmployee:any,
   employees: Array<EmployeeModel>,
 };
@@ -22,6 +23,7 @@ type State = {
 };
 
 class EmployeesList extends Component<Props, State> {
+  
   constructor(props:any) {
     super(props);
 
@@ -29,33 +31,18 @@ class EmployeesList extends Component<Props, State> {
     this.removeEmployee = this.removeEmployee.bind(this);
 
   }
-
+  
   componentDidMount() {
     this.props.retrieveEmployees();
   }
 
 
- removeEmployee(id:String) {
-      this.props
-      .deleteEmployee(id)
-      .then((response:any) => {
-        console.log(response);
-        this.props.retrieveEmployees();
-      })
-      .catch((e:any) => {
-        console.log(e);
-      });
+ removeEmployee(id:string) {
+      this.props.deleteEmployee(id);
   }
 
   removeAllEmployees() {
-    this.props
-      .deleteAllEmployees()
-      .then((response:any) => {
-        console.log(response);
-      })
-      .catch((e:any) => {
-        console.log(e);
-      });
+    this.props.deleteAllEmployees();
   }
 
 
@@ -83,7 +70,7 @@ class EmployeesList extends Component<Props, State> {
                 <Tr>
                   <Td>{employee.name}</Td>
                   <Td>{employee.gender}</Td>
-                  <Td>{employee.dob}</Td>
+                  <Td>{moment(new Date(employee.dob)).format('DD-MM-YYYY')}</Td>
                   <Td>{employee.sallary}</Td>
                   <Td>
                       <Link to={"/employee/" + employee._id}><ButtonPrimary>Edit</ButtonPrimary></Link>

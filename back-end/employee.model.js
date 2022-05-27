@@ -6,13 +6,13 @@ let EmployeeSchema = new Schema({
         type: String
     },
     dob: {
-        type: String
+        type: Date
     },
     gender: {
         type: String
     },
     sallary: {
-        type: String
+        type: Number
     }
 });
 

@@ -20,7 +20,7 @@ function employeeReducer(employees = initialState, action) {
 
     case UPDATE_EMPLOYEE:
       return employees.map((employee) => {
-        if (employee.id === payload.id) {
+        if (employee._id === payload._id) {
           return {
             ...employee,
             ...payload,
@@ -31,7 +31,7 @@ function employeeReducer(employees = initialState, action) {
       });
 
     case DELETE_EMPLOYEE:
-      return employees.filter(({ id }) => id !== payload.id);
+      return employees.filter(item => item._id !== payload);
 
     case DELETE_ALL_EMPLOYEES:
       return [];

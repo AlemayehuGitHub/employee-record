@@ -27,6 +27,7 @@ router.get('/employees', (req, res) => {
     Employee.find((err, results) => {
         if (err) console.log(err);
         else res.json(results);
+        console.log(results)
     });
 });
 
@@ -36,6 +37,7 @@ router.get('/employee/:id', (req, res) => {
     Employee.findById(id, (err, result) => {
         if (err) console.log(err);
         else res.json(result);
+        console.log(result);
     });
 });
 
@@ -51,11 +53,14 @@ router.post('/employee', (req, res) => {
 
 router.put('/employee/:id', (req, res) => {
     console.log("Update entry request received");
+    console.log(req.body);
     Employee.findById(req.params.id, (err, data) => {
         if (!data) res.status(404).send("Employee is not found");
         else {
             data.name = req.body.name;
-            data.description = req.body.description;
+            data.gender = req.body.gender;
+            data.dob = req.body.dob;
+            data.sallary = req.body.sallary;
             
             data.save().then(data => {
                 res.json('Employee Data is updated!');

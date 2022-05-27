@@ -10,27 +10,27 @@ class EmployeeDataService {
   });
 
   getAll() {
-    return this.http.get<Array<EmployeeModel>>("/employees");
+    return this.http.get("/employees");
   }
 
   get(id: string) {
-    return this.http.get<EmployeeModel>(`/employee/${id}`);
+    return this.http.get(`/employee/${id}`);
   }
 
   create(data: EmployeeModel) {
-    return this.http.post<EmployeeModel>("/employee", data);
+    return this.http.post("/employee", data);
   }
 
   update(id: any, data: EmployeeModel) {
-    return this.http.put<any>(`/employee/${id}`, data);
+    return this.http.put(`/employee/${id}`, data);
   }
 
-  delete(id: any) {
-    return this.http.delete<any>(`/employee/${id}`);
+  delete(id: string) {
+    return this.http.delete(`/employee/${id}`);
   }
 
   deleteAll() {
-    return this.http.delete<any>(`/employees`);
+    return this.http.delete(`/employees`);
   }
 
 }

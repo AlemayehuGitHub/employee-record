@@ -1,3 +1,4 @@
+import moment from "moment";
 import React, { ChangeEvent, Component, PropsWithChildren } from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
@@ -5,17 +6,21 @@ import { updateEmployee, deleteEmployee } from "../actions/employees";
 
 import EmployeeDataService from "../services/EmployeeDataService";
 import { ButtonDanger, Container } from "../styles/Components";
-import { AlertInfo, ButtonSubmit, FormContainer, FormGroup, Input, Label, Select } from "../styles/Forms";
+import { AlertInfo, ButtonSubmit, ErrorMessage, FormContainer, FormGroup, Input, Label, Select } from "../styles/Forms";
 import EmployeeModel from "../types/EmployeeModel";
 
 type Props = { 
   updateEmployee: Function, 
   deleteEmployee: Function
- };
+};
 
 type State = {
   currentEmployee: EmployeeModel,
-  message ?: String | null
+  message ?: String | null,
+  name_error ?: string | null,
+  dob_error ?: string | null,
+  gender_error ?: string | null,
+  sallary_error ?: string | null
 };
 
 interface IReactRouterParams {
@@ -31,16 +36,15 @@ class UpdateEmployee extends Component<Props & RouteComponentProps<IReactRouterP
     this.onChangeDoB = this.onChangeDoB.bind(this);
     this.onChangeGender = this.onChangeGender.bind(this);
     this.onChangeSallary = this.onChangeSallary.bind(this);
-    this.removeEmployee = this.removeEmployee.bind(this);
     this.updateContent = this.updateContent.bind(this);
 
     this.state = {
       currentEmployee: {
         _id: null,
         name: "",
-        dob: "",
+        dob: new Date(),
         gender: "",
-        sallary: "",
+        sallary: 0,
       },
       message: null,
     };
@@ -65,7 +69,7 @@ class UpdateEmployee extends Component<Props & RouteComponentProps<IReactRouterP
   }
 
   onChangeDoB(e: ChangeEvent<HTMLInputElement>) {
-    const dob = e.target.value;
+    const dob = new Date(e.target.value);
 
     this.setState(function (prevState) {
       return {
@@ -91,7 +95,7 @@ class UpdateEmployee extends Component<Props & RouteComponentProps<IReactRouterP
   }
 
   onChangeSallary(e: ChangeEvent<HTMLInputElement>) {
-    const sallary = e.target.value;
+    const sallary = Number(e.target.value);
 
     this.setState(function (prevState) {
       return {
@@ -107,8 +111,9 @@ class UpdateEmployee extends Component<Props & RouteComponentProps<IReactRouterP
   getEmployee(id: string) {
     EmployeeDataService.get(id)
       .then((response) => {
-        this.setState({
-          currentEmployee: response.data,
+          console.log("Retrieving employee")
+          this.setState({
+            currentEmployee: response.data,
         });
         console.log(response.data);
       })
@@ -119,29 +124,45 @@ class UpdateEmployee extends Component<Props & RouteComponentProps<IReactRouterP
 
 
   updateContent() {
-    this.props
-      .updateEmployee(this.state.currentEmployee._id, this.state.currentEmployee)
-      .then((reponse:any) => {
-        console.log(reponse);
-        console.log(this.state.currentEmployee);
-        this.setState({ message: "Employee Data was updated successfully!" });
-      })
-      .catch((e:any) => {
-        console.log(e);
-      });
+    
+    this.resetErrorMessages();
+
+    if(this.validate(this.state.currentEmployee)) {
+      this.props.updateEmployee(this.state.currentEmployee._id, this.state.currentEmployee)
+      this.setState({ message: "Employee Data was updated successfully!" });
+    }
+    
   }
 
-  removeEmployee() {
-    this.props
-      .deleteEmployee(this.state.currentEmployee._id)
-      .then(() => {
-        this.props.history.push("/employees");
-      })
-      .catch((e:any) => {
-        console.log(e);
-      });
+  resetErrorMessages() {
+    this.setState({
+      name_error: null,
+      dob_error: null,
+      gender_error: null,
+      sallary_error: null
+    });
   }
-
+  
+  validate(data: EmployeeModel) {
+    if(typeof data.name !== "string" || data.name.length < 3){
+      this.setState({ name_error: "Please Enter Valid Employee Name!" });
+      return false
+    }
+    if(data.gender == null || data.gender == ""){
+      this.setState({ gender_error: "Please select employee gender" });
+      return false
+    }
+    if(typeof data.sallary !== "number" || data.sallary == NaN){
+      this.setState({ sallary_error: "Please Enter a Number!" });
+      return false
+    }
+    if(data.sallary < 1000){
+      this.setState({ sallary_error: "You can't pay less than 1000 for employee!" });
+      return false
+    }
+    return true
+  }
+  
   render() {
     const { currentEmployee } = this.state;
 
@@ -158,14 +179,19 @@ class UpdateEmployee extends Component<Props & RouteComponentProps<IReactRouterP
               ): ("")
             }
             <FormContainer>
+
               <FormGroup>
                 <Label htmlFor="name">Name</Label>
                 <Input type="text" id="name" value={currentEmployee.name} onChange={this.onChangeName} name="name" required/>
+                <ErrorMessage>{ this.state.name_error}</ErrorMessage>
               </FormGroup>
+
               <FormGroup>
                 <Label htmlFor="dob">Date of Birth</Label>
-                <Input type="date" id="dob" value={currentEmployee.dob} onChange={this.onChangeDoB} name="dob" required/>
+                <Input type="date" id="dob" value={moment(currentEmployee.dob).format('yyyy-MM-DD')} onChange={this.onChangeDoB} name="dob" required/>
+                <ErrorMessage>{ this.state.dob_error}</ErrorMessage>
               </FormGroup>
+
               <FormGroup>
                 <Label htmlFor="gender">Gender</Label>
                 <Select value={currentEmployee.gender} id="gender" name="gender" onChange={this.onChangeGender}>
@@ -173,23 +199,17 @@ class UpdateEmployee extends Component<Props & RouteComponentProps<IReactRouterP
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                 </Select>
+                <ErrorMessage>{ this.state.gender_error}</ErrorMessage>
               </FormGroup>
+
               <FormGroup>
                 <Label htmlFor="sallary">Sallary</Label>
-                <Input type="text" id="sallary" value={currentEmployee.sallary} onChange={this.onChangeSallary} name="salary" required/>
+                <Input type="text" id="sallary" value={currentEmployee.sallary || 0} onChange={this.onChangeSallary} name="salary" required/>
+                <ErrorMessage>{ this.state.sallary_error}</ErrorMessage>
               </FormGroup>
-              <ButtonDanger
-              onClick={this.removeEmployee}
-            >
-              Delete
-            </ButtonDanger>
-
-            <ButtonSubmit
-              className="btn btn-sm btn-success"
-              onClick={this.updateContent}
-            >
-              Update
-            </ButtonSubmit>
+              
+              <ButtonSubmit onClick={this.updateContent}> Update </ButtonSubmit>
+            
             </FormContainer>
           </Container>
         ) : (
