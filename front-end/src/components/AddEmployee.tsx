@@ -2,7 +2,6 @@ import { Component, ChangeEvent } from "react";
 import EmployeeModel from "../types/EmployeeModel";
 import { connect } from "react-redux";
 import { createEmployee } from "../actions/employees";
-
 import { FormGroup, Label, Input, FormContainer, ButtonSubmit, AlertInfo, Select, ErrorMessage } from "./../styles/Forms";
 import { Container } from "../styles/Components";
 import moment from "moment";

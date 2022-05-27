@@ -3,7 +3,6 @@ import React, { ChangeEvent, Component, PropsWithChildren } from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { updateEmployee, deleteEmployee } from "../actions/employees";
-
 import EmployeeDataService from "../services/EmployeeDataService";
 import { ButtonDanger, Container } from "../styles/Components";
 import { AlertInfo, ButtonSubmit, ErrorMessage, FormContainer, FormGroup, Input, Label, Select } from "../styles/Forms";
@@ -131,7 +130,7 @@ class UpdateEmployee extends Component<Props & RouteComponentProps<IReactRouterP
       this.props.updateEmployee(this.state.currentEmployee._id, this.state.currentEmployee)
       this.setState({ message: "Employee Data was updated successfully!" });
     }
-    
+
   }
 
   resetErrorMessages() {
@@ -165,7 +164,6 @@ class UpdateEmployee extends Component<Props & RouteComponentProps<IReactRouterP
   
   render() {
     const { currentEmployee } = this.state;
-
     return (
       <Container>
         {currentEmployee ? (

@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { connect, useDispatch } from "react-redux";
-import {
-  retrieveEmployees,
-  deleteAllEmployees,
-  deleteEmployee
-} from "../actions/employees";
+import { retrieveEmployees, deleteAllEmployees, deleteEmployee } from "../actions/employees";
 import { Link } from "react-router-dom";
 import EmployeeModel from "../types/EmployeeModel";
 import { ButtonDanger, ButtonPrimary, Container, Table, Td, Tr } from "../styles/Components";
@@ -48,7 +44,6 @@ class EmployeesList extends Component<Props, State> {
 
   render() {
     const { employees } = this.props;
-
     return (
       <Container>
         <h3 className="w-100">Employees List</h3>
@@ -77,7 +72,8 @@ class EmployeesList extends Component<Props, State> {
                       <ButtonDanger onClick={() => this.removeEmployee(employee._id)}>Delete</ButtonDanger>
                   </Td>
               </Tr>
-              ))}
+              ))
+            }
             </tbody>
           </Table>
           <ButtonDanger
