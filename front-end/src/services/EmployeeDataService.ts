@@ -3,11 +3,13 @@ import EmployeeModel from "../types/EmployeeModel"
 
 class EmployeeDataService {
   private http = axios.create({
-    baseURL: process.env.MONGODB_URI+":"+process.env.PORT+"/api" || "http://localhost:4000/api",
+    baseURL: "http://localhost:4000/api",
     headers: {
       "Content-type": "application/json"
     }
   });
+
+  //process.env.MONGODB_URI+":"+process.env.PORT+"/api" ||
 
   getAll() {
     return this.http.get("/employees");
